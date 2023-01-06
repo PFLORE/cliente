@@ -21,6 +21,9 @@ public class Cliente {
 	@Column(name = "apellidos")
 	private String apellidos;
 	
+	@Column(name = "tipo_documento")
+	private String tipoDocumento;
+	
 	@Column(name = "numero_documento")
 	private String numeroDocumento;
 	
@@ -28,6 +31,12 @@ public class Cliente {
 	private Integer edad;
 
 	public Cliente() {
+	}
+	
+	public Cliente(Integer id, String nombres, Integer edad) {
+		this.id = id;
+		this.nombres = nombres;
+		this.edad = edad;
 	}
 
 	public Integer getId() {
@@ -52,6 +61,14 @@ public class Cliente {
 
 	public void setApellidos(String apellidos) {
 		this.apellidos = apellidos;
+	}
+
+	public String getTipoDocumento() {
+		return tipoDocumento;
+	}
+
+	public void setTipoDocumento(String tipoDocumento) {
+		this.tipoDocumento = tipoDocumento;
 	}
 
 	public String getNumeroDocumento() {

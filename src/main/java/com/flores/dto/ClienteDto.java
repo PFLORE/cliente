@@ -7,10 +7,17 @@ public class ClienteDto {
 	private String id;
 	private String nombres;
 	private String apellidos;
+	private String tipoDocumento;
 	private String numeroDocumento;
 	private Integer edad;
 	
 	public ClienteDto() {
+	}
+	
+	public ClienteDto(String id, String nombres, Integer edad) {
+		this.id = id;
+		this.nombres = nombres;
+		this.edad = edad;
 	}
 
 	public String getId() {
@@ -41,6 +48,14 @@ public class ClienteDto {
 
 	public void setApellidos(String apellidos) {
 		this.apellidos = apellidos;
+	}
+
+	public String getTipoDocumento() {
+		return tipoDocumento;
+	}
+
+	public void setTipoDocumento(String tipoDocumento) {
+		this.tipoDocumento = tipoDocumento;
 	}
 
 	public String getNumeroDocumento() {

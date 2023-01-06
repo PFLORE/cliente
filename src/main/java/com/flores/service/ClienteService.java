@@ -27,9 +27,12 @@ public class ClienteService {
 	}
 	
 	public List<ClienteDto> ObtenerMayorA(Integer valor) {
-		List<ClienteDto> _lista = repository.findByMayorA(valor)
-				.stream().map(this::convertToDto)
+		
+		List<ClienteDto> _lista = repository.findAll()
+				.stream().filter(x -> x.getEdad() > valor)
+				.map(this::convertToDto)
 				.collect(Collectors.toList());
+		
 		return _lista;
 	}
 	
@@ -45,7 +48,6 @@ public class ClienteService {
 	
 	public ClienteDto convertToDto(Cliente post) {
 		ClienteDto dto = modelMapper.map(post, ClienteDto.class);
-		
 		return dto;
 	}
 }
