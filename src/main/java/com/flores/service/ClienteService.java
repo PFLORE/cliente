@@ -1,5 +1,7 @@
 package com.flores.service;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,6 +23,20 @@ public class ClienteService {
 	@Autowired
 	private ModelMapper modelMapper;
 	
+	public List<Cliente> listar() {
+		List<Cliente> clientes = new LinkedList<>();
+		
+		repository.findAll().forEach(clientes::add);
+		
+		return clientes;
+	}
+	
+	public List<Cliente> buscarPorNombre(String nombre) {
+		List<Cliente> clientes = new ArrayList<>();
+		repository.findByNombresContaining(nombre).forEach(clientes::add);
+		return clientes;
+	}
+	
 	public Optional<Cliente> obtenerPorId(Integer id) {
 		Optional<Cliente> _cliente = repository.findById(id);
 		return _cliente;
@@ -39,6 +55,10 @@ public class ClienteService {
 	public Cliente crear(Cliente cliente) {
 		Cliente _cliente = repository.save(cliente);
 		return _cliente;
+	}
+	
+	public void eliminarPorId(Integer id) {
+		repository.deleteById(id);
 	}
 	
 	public Cliente convertToEntity(ClienteDto post) {
