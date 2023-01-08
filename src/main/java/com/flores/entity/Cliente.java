@@ -6,6 +6,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "cliente")
@@ -16,15 +19,23 @@ public class Cliente {
 	private Integer id;
 	
 	@Column(name = "nombres")
+	@NotNull
+	@Size(max = 500, message = "500 caracteres como máximo")
 	private String nombres;
 	
 	@Column(name = "apellidos")
+	@NotNull
+	@Size(max = 600, message = "600 caracteres como máximo")
 	private String apellidos;
 	
 	@Column(name = "tipo_documento")
+	@NotNull
+	@Size(max = 100, message = "100 caracteres como máximo")
 	private String tipoDocumento;
 	
 	@Column(name = "numero_documento")
+	@NotNull
+	@Size(max = 11, message = "11 caracteres como máximo")
 	private String numeroDocumento;
 	
 	@Column(name = "edad")

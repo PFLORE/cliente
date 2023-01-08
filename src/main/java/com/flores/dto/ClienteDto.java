@@ -1,13 +1,21 @@
 package com.flores.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 import com.flores.util.Utilidades;
 
 public class ClienteDto {
 
 	private String id;
+	@NotBlank(message = "es requerido")
 	private String nombres;
+	@NotBlank(message = "es requerido")
 	private String apellidos;
+	@NotBlank(message = "es requerido")
 	private String tipoDocumento;
+	@NotBlank(message = "es requerido")
+	@Size(max = 11, message = "como máximo acepta 11 caracteres")
 	private String numeroDocumento;
 	private Integer edad;
 	

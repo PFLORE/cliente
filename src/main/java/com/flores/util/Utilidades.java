@@ -8,6 +8,10 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+
+import com.flores.dto.MensajeDto;
 
 public class Utilidades {
 
@@ -79,5 +83,14 @@ public class Utilidades {
 		} catch (NumberFormatException nfe){
 			return false;
 		}
+	}
+	
+	@SuppressWarnings({ "rawtypes"})
+	public static ResponseEntity<?> validarCampos(BindingResult result) {
+		MensajeDto objeto = new MensajeDto();
+		result.getFieldErrors().forEach((a) -> {
+			objeto.setMensaje("El campo " + a.getField() + " " + a.getDefaultMessage());
+		});
+		return ResponseEntity.badRequest().body(objeto);
 	}
 }

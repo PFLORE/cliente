@@ -3,9 +3,12 @@ package com.flores.controller;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.flores.dto.ClienteDto;
+import com.flores.dto.MensajeDto;
 import com.flores.entity.Cliente;
 import com.flores.service.ClienteService;
 import com.flores.util.Utilidades;
@@ -53,9 +57,10 @@ public class ClienteController {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 		}
 		
-		return new ResponseEntity(clientes, HttpStatus.OK);
+		return new ResponseEntity(new MensajeDto("Datos encontrados", clientes), HttpStatus.OK);
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@GetMapping(path = "/obtener/{id}")
 	public ResponseEntity<ClienteDto> obtenerPorId(@PathVariable("id") String id) throws Exception {
 		String _idStr = Utilidades.Desencriptar(id);
@@ -64,9 +69,9 @@ public class ClienteController {
 		ClienteDto _dto = service.obtenerPorId(_id).map(service::convertToDto).orElse(null);
 		
 		if(_dto != null) {
-			return new ResponseEntity<>(_dto, HttpStatus.OK);
+			return new ResponseEntity(new MensajeDto("Cliente encontrado", _dto), HttpStatus.OK);
 		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
 	}
 	
@@ -76,34 +81,44 @@ public class ClienteController {
 		List<ClienteDto> _lista = service.ObtenerMayorA(valor);
 		
 		if(_lista.size() != 0) {
-			return new ResponseEntity(_lista, HttpStatus.OK);
+			return new ResponseEntity(new MensajeDto("Clientes encontrados", _lista) , HttpStatus.OK);
 		} else {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 		}
 		
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@PostMapping(path = "/crear")
-	public ResponseEntity<ClienteDto> crear(@RequestBody ClienteDto clienteDto) {
+	public ResponseEntity<?> crear(@Valid @RequestBody ClienteDto clienteDto, BindingResult result) {
 		try {
+			
+			if (result.hasErrors()) {
+	            return Utilidades.validarCampos(result);
+	        }
 			
 			Cliente _entity = service.convertToEntity(clienteDto);
 			Cliente _cliente = service.crear(_entity);
 			
 			ClienteDto _dto = service.convertToDto(_cliente);
 			
-			return new ResponseEntity<>(_dto, HttpStatus.CREATED);
+			return new ResponseEntity(new MensajeDto("Cliente registado", _dto), HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@PutMapping(path = "/actualizar/{id}")
-	public ResponseEntity<ClienteDto> actualizar(@RequestBody ClienteDto clienteDto, 
-			@PathVariable("id") String id) throws Exception {
+	public ResponseEntity<?> actualizar(@Valid @RequestBody ClienteDto clienteDto, 
+			@PathVariable("id") String id, BindingResult result) throws Exception {
 		
 		String _idStr = Utilidades.Desencriptar(id);
 		Integer _id = Integer.parseInt(_idStr);
+		
+		if (result.hasErrors()) {
+            return Utilidades.validarCampos(result);
+        }
 		
 		ClienteDto _dtoResponse = service.obtenerPorId(_id).map(service::convertToDto).orElse(null);
 		
@@ -113,12 +128,13 @@ public class ClienteController {
 			
 			ClienteDto _dto = service.convertToDto(_cliente);
 			
-			return new ResponseEntity<>(_dto, HttpStatus.OK);
+			return new ResponseEntity(new MensajeDto("Cliente actualizado", _dto), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@DeleteMapping(path = "/eliminar/{id}")
 	public ResponseEntity<?> eliminar(@PathVariable("id") String id) throws Exception {
 		
@@ -127,6 +143,6 @@ public class ClienteController {
 		
 		service.eliminarPorId(_id);
 		
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity(new MensajeDto("Cliente eliminado"), HttpStatus.OK);
 	}
 }
