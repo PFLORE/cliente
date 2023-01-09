@@ -1,11 +1,10 @@
 package com.flores;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
-import java.util.LinkedList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,7 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -33,19 +31,33 @@ class ClienteApplicationTests {
 	@Mock
 	private ClienteRepository repository;
 	
-	@Mock
-	private ModelMapper modelMapper;
-	
 	@Test
-	@DisplayName("buscar cliente por id")
-    public void buscarClientePorId() {
+	@DisplayName("buscar cliente por id valido")
+    public void when_idIsValid_expect_client() {
 		
-		Cliente _cliente1 = new Cliente(1, "Cliente 1", 27);
-		Cliente _cliente2 = new Cliente(2, "Cliente 1", 27);
+		Cliente _cliente1 = new Cliente(1, "Pedro", 27);
 		
 		when(repository.findById(Mockito.anyInt())).thenReturn(Optional.ofNullable(_cliente1));
         
-        assertEquals(service.obtenerPorId(1).get().getEdad(), _cliente2.getEdad());
+		Cliente _cliente2 = service.obtenerPorId(1).get();
+		
+		assertNotNull(_cliente2);
+        assertEquals("Pedro", _cliente2.getNombres());
     }
+	
+	@Test
+	@DisplayName("Listar todos los clientes")
+	public void when_expect_allClients() {
+		
+		Cliente _cliente = new Cliente(1, "Juan", 25);
+		
+		when(repository.findAll()).thenReturn(Arrays.asList(_cliente));
+		
+		List<Cliente> _clientes = service.listar();
+		
+		assertNotNull(_clientes);
+		assertEquals(1, _clientes.size());
+		assertEquals("Juan", _clientes.get(0).getNombres());
+	}
 
 }

@@ -38,7 +38,9 @@ public class ClienteService {
 	}
 	
 	public Optional<Cliente> obtenerPorId(Integer id) {
+		
 		Optional<Cliente> _cliente = repository.findById(id);
+		
 		return _cliente;
 	}
 	

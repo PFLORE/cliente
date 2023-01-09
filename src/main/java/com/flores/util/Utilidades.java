@@ -76,7 +76,7 @@ public class Utilidades {
         return base64EncryptedString;
     }
 	
-	public static boolean esNumerico(String cadena){
+	public static boolean esNumerico(String cadena) {
 		try {
 			Integer.parseInt(cadena);
 			return true;
